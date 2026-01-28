@@ -1,0 +1,10 @@
+# Example requirements.txt with known vulnerabilities
+# For demonstration purposes only
+
+Flask==2.0.0
+requests==2.25.0
+Django==3.1.0
+Pillow==8.0.0
+pyyaml==5.3.1
+jinja2==2.11.0
+urllib3==1.26.4

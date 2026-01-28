@@ -1,0 +1,41 @@
+# Example CloudFormation template with security misconfigurations
+# For demonstration purposes only
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Example template with security issues'
+
+Resources:
+  PublicBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-public-bucket
+      AccessControl: PublicRead  # CRITICAL: Public access!
+
+  ExposedDatabase:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: my-database
+      Engine: mysql
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 20
+      MasterUsername: admin
+      MasterUserPassword: password123
+      PubliclyAccessible: true  # CRITICAL: Publicly accessible!
+      StorageEncrypted: false   # HIGH: No encryption!
+
+  UnrestrictedSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow all traffic
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0  # HIGH: Unrestricted access!
+
+  UnencryptedVolume:
+    Type: AWS::EC2::Volume
+    Properties:
+      AvailabilityZone: us-west-2a
+      Size: 40
+      Encrypted: false  # HIGH: No encryption!
