@@ -9,6 +9,7 @@ from secureguard.analyzers.terraform import TerraformAnalyzer
 from secureguard.analyzers.cloudformation import CloudFormationAnalyzer
 from secureguard.utils.severity import Severity
 from secureguard.utils.output import format_output, OutputFormat
+from secureguard.compliance.cli_commands import compliance_group
 
 
 @click.group()
@@ -19,6 +20,10 @@ def main():
     Detect vulnerabilities across your entire development lifecycle.
     """
     pass
+
+
+# Add compliance command group
+main.add_command(compliance_group)
 
 
 @main.group()

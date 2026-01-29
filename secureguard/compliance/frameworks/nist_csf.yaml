@@ -1,0 +1,500 @@
+# NIST Cybersecurity Framework
+# Version 1.1
+
+framework:
+  id: "NIST_CSF"
+  name: "NIST Cybersecurity Framework"
+  version: "1.1"
+  description: "Framework for improving critical infrastructure cybersecurity with five core functions: Identify, Protect, Detect, Respond, and Recover"
+
+domains:
+  # IDENTIFY Function
+  - id: "ID"
+    name: "Identify"
+    description: "Develop organizational understanding to manage cybersecurity risk to systems, people, assets, data, and capabilities"
+
+    controls:
+      - id: "ID.AM-2"
+        title: "Software Platforms and Applications Inventory"
+        description: "Software platforms and applications within the organization are inventoried"
+        category: "Asset Management"
+        severity: "MEDIUM"
+        priority: 2
+
+        requirements:
+          - "Inventory of all software dependencies"
+          - "Version tracking of software components"
+          - "Regular updates to software inventory"
+
+        mapped_checks:
+          - check_id: "DEPENDENCY_VULNERABILITY"
+            scanner_type: "deps"
+            weight: 0.8
+
+        evidence_requirements:
+          - type: "dependency_scan"
+            frequency: "weekly"
+
+        implementation_guidance: |
+          Maintain an inventory of software:
+          - Track all application dependencies
+          - Document software versions
+          - Regular dependency scans
+
+      - id: "ID.RA-1"
+        title: "Asset Vulnerabilities are Identified and Documented"
+        description: "Asset vulnerabilities are identified and documented"
+        category: "Risk Assessment"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Regular vulnerability scanning"
+          - "Documentation of identified vulnerabilities"
+          - "Risk assessment of vulnerabilities"
+
+        mapped_checks:
+          - check_id: "DEPENDENCY_VULNERABILITY"
+            scanner_type: "deps"
+            weight: 1.0
+          - check_id: "TF001"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "TF004"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF001"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF004"
+            scanner_type: "iac"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "vulnerability_scan"
+            frequency: "weekly"
+          - type: "risk_assessment"
+            frequency: "monthly"
+
+        implementation_guidance: |
+          Identify and document vulnerabilities:
+          - Regular vulnerability scans
+          - Risk assessment of findings
+          - Prioritization based on severity
+
+  # PROTECT Function
+  - id: "PR"
+    name: "Protect"
+    description: "Develop and implement appropriate safeguards to ensure delivery of critical services"
+
+    controls:
+      - id: "PR.AC-3"
+        title: "Remote Access is Managed"
+        description: "Remote access is managed"
+        category: "Access Control"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Secure remote access controls"
+          - "Multi-factor authentication"
+          - "Access logging and monitoring"
+
+        mapped_checks:
+          - check_id: "TF005"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF005"
+            scanner_type: "iac"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+          - type: "access_logs"
+            frequency: "daily"
+
+        implementation_guidance: |
+          Manage remote access securely:
+          - Restrict security group rules
+          - Avoid unrestricted ingress (0.0.0.0/0)
+          - Enable MFA for remote access
+          - Monitor and log access
+
+      - id: "PR.AC-4"
+        title: "Access Permissions and Authorizations are Managed"
+        description: "Access permissions and authorizations are managed, incorporating principles of least privilege"
+        category: "Access Control"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Least privilege access controls"
+          - "Regular access reviews"
+          - "IAM policy management"
+
+        mapped_checks:
+          - check_id: "TF001"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF004"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF006"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF001"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF004"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF006"
+            scanner_type: "iac"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+          - type: "access_review"
+            frequency: "quarterly"
+
+        implementation_guidance: |
+          Implement least privilege:
+          - Restrict public access to resources
+          - Avoid overly permissive IAM policies
+          - Regular access reviews
+          - Automated access control checks
+
+      - id: "PR.DS-1"
+        title: "Data-at-Rest is Protected"
+        description: "Data-at-rest is protected"
+        category: "Data Security"
+        severity: "CRITICAL"
+        priority: 1
+
+        requirements:
+          - "Encryption of data at rest"
+          - "Encryption key management"
+          - "Secure storage configuration"
+
+        mapped_checks:
+          - check_id: "TF002"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF003"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF008"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF002"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF003"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF008"
+            scanner_type: "iac"
+            weight: 1.0
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+
+        implementation_guidance: |
+          Protect data at rest:
+          - Enable S3 bucket encryption
+          - Enable RDS instance encryption
+          - Enable EBS volume encryption
+          - Use KMS for key management
+
+      - id: "PR.DS-2"
+        title: "Data-in-Transit is Protected"
+        description: "Data-in-transit is protected"
+        category: "Data Security"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "TLS/SSL encryption for data in transit"
+          - "Certificate management"
+          - "Secure communication protocols"
+
+        mapped_checks:
+          - check_id: "TF009"
+            scanner_type: "iac"
+            weight: 0.7
+          - check_id: "CF010"
+            scanner_type: "iac"
+            weight: 0.7
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+
+        implementation_guidance: |
+          Protect data in transit:
+          - Use TLS 1.2 or higher
+          - Enable HTTPS listeners
+          - Enforce encryption in transit
+
+      - id: "PR.IP-1"
+        title: "Baseline Configuration is Created and Maintained"
+        description: "A baseline configuration of information technology/industrial control systems is created and maintained"
+        category: "Information Protection"
+        severity: "MEDIUM"
+        priority: 2
+
+        requirements:
+          - "Infrastructure as Code for configuration"
+          - "Configuration management"
+          - "Baseline security settings"
+
+        mapped_checks:
+          - check_id: "TF001"
+            scanner_type: "iac"
+            weight: 0.7
+          - check_id: "TF002"
+            scanner_type: "iac"
+            weight: 0.7
+          - check_id: "CF001"
+            scanner_type: "iac"
+            weight: 0.7
+          - check_id: "CF002"
+            scanner_type: "iac"
+            weight: 0.7
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+
+        implementation_guidance: |
+          Maintain baseline configurations:
+          - Use Infrastructure as Code
+          - Version control for configurations
+          - Regular security scans
+
+  # DETECT Function
+  - id: "DE"
+    name: "Detect"
+    description: "Develop and implement appropriate activities to identify occurrence of cybersecurity events"
+
+    controls:
+      - id: "DE.AE-2"
+        title: "Detected Events are Analyzed"
+        description: "Detected events are analyzed to understand attack targets and methods"
+        category: "Anomalies and Events"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Event analysis capabilities"
+          - "Attack pattern detection"
+          - "Security event correlation"
+
+        mapped_checks:
+          - check_id: "SQL_INJECTION"
+            scanner_type: "runtime"
+            weight: 1.0
+          - check_id: "XSS"
+            scanner_type: "runtime"
+            weight: 1.0
+          - check_id: "COMMAND_INJECTION"
+            scanner_type: "runtime"
+            weight: 1.0
+
+        evidence_requirements:
+          - type: "runtime_monitoring"
+            frequency: "continuous"
+          - type: "event_analysis"
+            frequency: "daily"
+
+        implementation_guidance: |
+          Analyze detected events:
+          - Deploy runtime security sensors
+          - Detect attack patterns
+          - Correlate security events
+          - Analyze attack methods
+
+      - id: "DE.CM-1"
+        title: "Network is Monitored"
+        description: "The network is monitored to detect potential cybersecurity events"
+        category: "Security Continuous Monitoring"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Network monitoring"
+          - "Intrusion detection"
+          - "Traffic analysis"
+
+        mapped_checks:
+          - check_id: "SQL_INJECTION"
+            scanner_type: "runtime"
+            weight: 0.8
+          - check_id: "XSS"
+            scanner_type: "runtime"
+            weight: 0.8
+          - check_id: "PATH_TRAVERSAL"
+            scanner_type: "runtime"
+            weight: 0.8
+          - check_id: "SSRF"
+            scanner_type: "runtime"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "runtime_monitoring"
+            frequency: "continuous"
+
+        implementation_guidance: |
+          Monitor network for threats:
+          - Runtime attack detection
+          - Monitor for injection attacks
+          - Detect unauthorized access attempts
+          - Log and alert on suspicious activity
+
+      - id: "DE.CM-4"
+        title: "Malicious Code is Detected"
+        description: "Malicious code is detected"
+        category: "Security Continuous Monitoring"
+        severity: "CRITICAL"
+        priority: 1
+
+        requirements:
+          - "Vulnerability scanning"
+          - "Dependency analysis"
+          - "Malware detection"
+
+        mapped_checks:
+          - check_id: "DEPENDENCY_VULNERABILITY"
+            scanner_type: "deps"
+            weight: 1.0
+
+        evidence_requirements:
+          - type: "dependency_scan"
+            frequency: "weekly"
+
+        implementation_guidance: |
+          Detect malicious code:
+          - Scan dependencies for known CVEs
+          - Monitor for vulnerable packages
+          - Automated vulnerability alerts
+
+      - id: "DE.CM-8"
+        title: "Vulnerability Scans are Performed"
+        description: "Vulnerability scans are performed"
+        category: "Security Continuous Monitoring"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Regular vulnerability scanning"
+          - "Infrastructure security scans"
+          - "Application security scans"
+
+        mapped_checks:
+          - check_id: "DEPENDENCY_VULNERABILITY"
+            scanner_type: "deps"
+            weight: 1.0
+          - check_id: "TF001"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "TF002"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "TF003"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF001"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF002"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF003"
+            scanner_type: "iac"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "vulnerability_scan"
+            frequency: "weekly"
+
+        implementation_guidance: |
+          Perform vulnerability scans:
+          - Regular dependency scans
+          - IaC security scanning
+          - Configuration validation
+
+  # RESPOND Function
+  - id: "RS"
+    name: "Respond"
+    description: "Develop and implement appropriate activities to take action regarding a detected cybersecurity incident"
+
+    controls:
+      - id: "RS.AN-1"
+        title: "Notifications from Detection Systems are Investigated"
+        description: "Notifications from detection systems are investigated"
+        category: "Analysis"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Investigation procedures"
+          - "Alert triage"
+          - "Incident analysis"
+
+        mapped_checks:
+          - check_id: "TF007"
+            scanner_type: "iac"
+            weight: 0.8
+          - check_id: "CF007"
+            scanner_type: "iac"
+            weight: 0.8
+
+        evidence_requirements:
+          - type: "investigation_logs"
+            frequency: "per_incident"
+
+        implementation_guidance: |
+          Investigate security notifications:
+          - Enable logging for all systems
+          - Alert on security events
+          - Triage and investigate alerts
+          - Document investigations
+
+  # RECOVER Function
+  - id: "RC"
+    name: "Recover"
+    description: "Develop and implement appropriate activities to maintain plans for resilience and restore capabilities"
+
+    controls:
+      - id: "RC.RP-1"
+        title: "Recovery Plan is Executed"
+        description: "Recovery plan is executed during or after a cybersecurity incident"
+        category: "Recovery Planning"
+        severity: "MEDIUM"
+        priority: 2
+
+        requirements:
+          - "Backup and recovery procedures"
+          - "Business continuity planning"
+          - "Disaster recovery testing"
+
+        mapped_checks:
+          - check_id: "TF010"
+            scanner_type: "iac"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "backup_logs"
+            frequency: "daily"
+          - type: "recovery_test"
+            frequency: "quarterly"
+
+        implementation_guidance: |
+          Maintain recovery capabilities:
+          - Enable automated backups
+          - Regular backup testing
+          - Document recovery procedures
+          - Test disaster recovery plans

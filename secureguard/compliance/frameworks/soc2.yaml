@@ -1,0 +1,451 @@
+# SOC 2 Type II Trust Service Criteria
+# Based on 2017 TSC framework
+
+framework:
+  id: "SOC2_TYPE2"
+  name: "SOC 2 Type II"
+  version: "2017"
+  description: "Service Organization Control 2 Type II Trust Services Criteria for security, availability, processing integrity, confidentiality, and privacy"
+
+domains:
+  # Common Criteria (CC) - Applies to all trust services
+  - id: "CC"
+    name: "Common Criteria"
+    description: "Common criteria applicable to all trust services"
+
+    controls:
+      - id: "CC6.1"
+        title: "Logical and Physical Access Controls"
+        description: "The entity implements logical and physical access controls to restrict access to system resources, data, and physical access to facilities"
+        category: "Access Control"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Multi-factor authentication for privileged access"
+          - "Encryption of data at rest and in transit"
+          - "Regular access reviews and least privilege enforcement"
+          - "Secure configuration of cloud resources"
+
+        mapped_checks:
+          - check_id: "TF001"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "TF004"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "TF005"
+            scanner_type: "iac"
+            weight: 0.8
+          - check_id: "CF001"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF004"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF005"
+            scanner_type: "iac"
+            weight: 0.8
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+            description: "Infrastructure as Code security scans"
+          - type: "access_logs"
+            frequency: "daily"
+            description: "Access control logs"
+
+        implementation_guidance: |
+          Implement strong access controls for all cloud resources:
+          - Enable encryption for all data stores (S3, RDS, EBS)
+          - Restrict public access to resources
+          - Configure security groups with least privilege
+          - Enable MFA for privileged accounts
+          - Implement automated access reviews
+
+      - id: "CC6.6"
+        title: "Encryption"
+        description: "The entity implements encryption to protect data at rest and in transit"
+        category: "Data Protection"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Data at rest encryption for databases and storage"
+          - "TLS/SSL for data in transit"
+          - "Encryption key management and rotation"
+
+        mapped_checks:
+          - check_id: "TF002"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF003"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF008"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF002"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF003"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF008"
+            scanner_type: "iac"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+            description: "Encryption configuration validation"
+
+        implementation_guidance: |
+          Enable encryption for all data at rest:
+          - Configure S3 bucket encryption (AES-256 or KMS)
+          - Enable RDS encryption for all database instances
+          - Enable EBS volume encryption
+          - Use TLS 1.2+ for all data in transit
+
+      - id: "CC6.7"
+        title: "System Operations"
+        description: "The entity restricts access to system resources through automated access control mechanisms"
+        category: "Access Control"
+        severity: "MEDIUM"
+        priority: 2
+
+        requirements:
+          - "Automated access control enforcement"
+          - "Network segmentation"
+          - "Firewall rules and security groups"
+
+        mapped_checks:
+          - check_id: "TF005"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF006"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF005"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF006"
+            scanner_type: "iac"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+
+        implementation_guidance: |
+          Configure network security controls:
+          - Implement security groups with least privilege
+          - Avoid overly permissive IAM policies
+          - Restrict ingress/egress to known IPs
+          - Enable VPC flow logs
+
+      - id: "CC7.1"
+        title: "System Monitoring"
+        description: "The entity monitors the system to identify and respond to potential system events"
+        category: "Monitoring & Logging"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Logging and monitoring of system events"
+          - "Security event detection"
+          - "Log retention and analysis"
+
+        mapped_checks:
+          - check_id: "TF007"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "TF009"
+            scanner_type: "iac"
+            weight: 0.8
+          - check_id: "CF007"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF010"
+            scanner_type: "iac"
+            weight: 0.8
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+          - type: "log_review"
+            frequency: "daily"
+
+        implementation_guidance: |
+          Enable comprehensive logging and monitoring:
+          - Enable CloudWatch logging for all services
+          - Configure CloudTrail for API activity logging
+          - Enable load balancer access logging
+          - Set up alerts for security events
+
+      - id: "CC7.2"
+        title: "Security Incident Detection and Response"
+        description: "The entity detects and responds to security incidents in a timely manner"
+        category: "Security Monitoring"
+        severity: "CRITICAL"
+        priority: 1
+
+        requirements:
+          - "Real-time security monitoring"
+          - "Attack detection capabilities"
+          - "Incident response procedures"
+
+        mapped_checks:
+          - check_id: "SQL_INJECTION"
+            scanner_type: "runtime"
+            weight: 1.0
+          - check_id: "XSS"
+            scanner_type: "runtime"
+            weight: 1.0
+          - check_id: "PATH_TRAVERSAL"
+            scanner_type: "runtime"
+            weight: 0.9
+          - check_id: "COMMAND_INJECTION"
+            scanner_type: "runtime"
+            weight: 1.0
+          - check_id: "XXE"
+            scanner_type: "runtime"
+            weight: 0.8
+          - check_id: "LDAP_INJECTION"
+            scanner_type: "runtime"
+            weight: 0.7
+          - check_id: "SSRF"
+            scanner_type: "runtime"
+            weight: 0.9
+          - check_id: "NOSQL_INJECTION"
+            scanner_type: "runtime"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "runtime_monitoring"
+            frequency: "continuous"
+          - type: "incident_logs"
+            frequency: "continuous"
+
+        implementation_guidance: |
+          Implement runtime security monitoring:
+          - Deploy runtime attack detection sensors
+          - Monitor for injection attacks (SQL, XSS, command injection)
+          - Detect path traversal and SSRF attempts
+          - Configure automated alerting for detected attacks
+          - Maintain incident response playbooks
+
+      - id: "CC7.3"
+        title: "Change Management"
+        description: "The entity implements change management procedures to ensure system changes are authorized, tested, and documented"
+        category: "Change Management"
+        severity: "MEDIUM"
+        priority: 2
+
+        requirements:
+          - "Version control for infrastructure code"
+          - "Automated testing before deployment"
+          - "Audit trail of changes"
+
+        mapped_checks: []
+
+        evidence_requirements:
+          - type: "change_logs"
+            frequency: "continuous"
+          - type: "code_review"
+            frequency: "per_change"
+
+        implementation_guidance: |
+          Establish change management processes:
+          - Use version control for all infrastructure code
+          - Implement code review requirements
+          - Run automated security scans before deployment
+          - Maintain audit logs of all changes
+
+      - id: "CC8.1"
+        title: "Backup and Recovery"
+        description: "The entity implements backup and recovery procedures to ensure business continuity"
+        category: "Business Continuity"
+        severity: "MEDIUM"
+        priority: 2
+
+        requirements:
+          - "Regular backups of critical data"
+          - "Tested recovery procedures"
+          - "Backup retention policies"
+
+        mapped_checks:
+          - check_id: "TF010"
+            scanner_type: "iac"
+            weight: 0.9
+          - check_id: "CF010"
+            scanner_type: "iac"
+            weight: 0.9
+
+        evidence_requirements:
+          - type: "backup_logs"
+            frequency: "daily"
+          - type: "recovery_test"
+            frequency: "quarterly"
+
+        implementation_guidance: |
+          Configure backup and recovery:
+          - Enable automated backups for databases
+          - Set appropriate backup retention periods
+          - Test recovery procedures regularly
+          - Document recovery time objectives (RTO) and recovery point objectives (RPO)
+
+  # Additional Trust Service Categories
+  - id: "A"
+    name: "Availability"
+    description: "System availability for operation and use as committed or agreed"
+
+    controls:
+      - id: "A1.1"
+        title: "System Availability"
+        description: "The entity maintains system availability as committed through capacity planning and monitoring"
+        category: "Availability"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Monitoring of system availability"
+          - "Capacity planning"
+          - "Performance optimization"
+
+        mapped_checks:
+          - check_id: "TF007"
+            scanner_type: "iac"
+            weight: 0.7
+          - check_id: "CF007"
+            scanner_type: "iac"
+            weight: 0.7
+
+        evidence_requirements:
+          - type: "uptime_logs"
+            frequency: "continuous"
+          - type: "performance_metrics"
+            frequency: "continuous"
+
+        implementation_guidance: |
+          Monitor and maintain system availability:
+          - Enable CloudWatch metrics and alarms
+          - Configure auto-scaling
+          - Implement health checks
+          - Monitor application performance
+
+  - id: "C"
+    name: "Confidentiality"
+    description: "Information designated as confidential is protected as committed or agreed"
+
+    controls:
+      - id: "C1.1"
+        title: "Confidential Information Protection"
+        description: "The entity protects confidential information during collection, use, retention, and disposal"
+        category: "Data Protection"
+        severity: "CRITICAL"
+        priority: 1
+
+        requirements:
+          - "Encryption of confidential data"
+          - "Access controls for confidential information"
+          - "Secure data disposal"
+
+        mapped_checks:
+          - check_id: "TF001"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF002"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "TF003"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF001"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF002"
+            scanner_type: "iac"
+            weight: 1.0
+          - check_id: "CF003"
+            scanner_type: "iac"
+            weight: 1.0
+
+        evidence_requirements:
+          - type: "configuration_scan"
+            frequency: "weekly"
+          - type: "access_audit"
+            frequency: "monthly"
+
+        implementation_guidance: |
+          Protect confidential information:
+          - Encrypt all confidential data at rest
+          - Restrict access to confidential resources
+          - Implement data classification
+          - Secure data deletion procedures
+
+  - id: "P"
+    name: "Privacy"
+    description: "Personal information is collected, used, retained, disclosed, and disposed to meet entity's objectives"
+
+    controls:
+      - id: "P1.1"
+        title: "Privacy Notice"
+        description: "The entity provides notice about its privacy practices to data subjects"
+        category: "Privacy"
+        severity: "MEDIUM"
+        priority: 3
+
+        requirements:
+          - "Privacy policy documentation"
+          - "Notice of data collection and use"
+          - "User consent mechanisms"
+
+        mapped_checks: []
+
+        evidence_requirements:
+          - type: "privacy_policy"
+            frequency: "annual_review"
+
+        implementation_guidance: |
+          Maintain privacy documentation:
+          - Publish privacy policy
+          - Provide data collection notices
+          - Implement consent mechanisms
+          - Document data handling practices
+
+  # Software Development Lifecycle (SDLC)
+  - id: "SDLC"
+    name: "Secure Development"
+    description: "Secure software development lifecycle practices"
+
+    controls:
+      - id: "SDLC1.1"
+        title: "Dependency Vulnerability Management"
+        description: "The entity manages vulnerabilities in software dependencies"
+        category: "Vulnerability Management"
+        severity: "HIGH"
+        priority: 1
+
+        requirements:
+          - "Regular dependency vulnerability scanning"
+          - "Timely patching of vulnerable dependencies"
+          - "Dependency update process"
+
+        mapped_checks:
+          - check_id: "DEPENDENCY_VULNERABILITY"
+            scanner_type: "deps"
+            weight: 1.0
+
+        evidence_requirements:
+          - type: "dependency_scan"
+            frequency: "weekly"
+          - type: "patch_logs"
+            frequency: "monthly"
+
+        implementation_guidance: |
+          Manage dependency vulnerabilities:
+          - Scan dependencies for known CVEs
+          - Update vulnerable dependencies promptly
+          - Monitor security advisories
+          - Automate dependency scanning in CI/CD

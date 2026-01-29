@@ -1,0 +1,63 @@
+{
+  "findings": [
+    {
+      "id": "TF001",
+      "type": "IAC_MISCONFIGURATION",
+      "severity": "CRITICAL",
+      "title": "S3 Bucket Public Access",
+      "description": "S3 bucket is publicly accessible",
+      "file": "infrastructure/main.tf",
+      "resource": "aws_s3_bucket.data",
+      "remediation": "Set acl to 'private' and enable block_public_access"
+    },
+    {
+      "id": "TF002",
+      "type": "IAC_MISCONFIGURATION",
+      "severity": "HIGH",
+      "title": "S3 Bucket Encryption Disabled",
+      "description": "S3 bucket does not have encryption enabled",
+      "file": "infrastructure/main.tf",
+      "resource": "aws_s3_bucket.data",
+      "remediation": "Enable server_side_encryption_configuration"
+    },
+    {
+      "id": "TF003",
+      "type": "IAC_MISCONFIGURATION",
+      "severity": "HIGH",
+      "title": "RDS Instance Encryption Disabled",
+      "description": "RDS database instance does not have encryption at rest enabled",
+      "file": "infrastructure/database.tf",
+      "resource": "aws_db_instance.main",
+      "remediation": "Set storage_encrypted = true"
+    },
+    {
+      "id": "TF005",
+      "type": "IAC_MISCONFIGURATION",
+      "severity": "HIGH",
+      "title": "Security Group Unrestricted Ingress",
+      "description": "Security group allows unrestricted inbound access from 0.0.0.0/0",
+      "file": "infrastructure/network.tf",
+      "resource": "aws_security_group.web",
+      "remediation": "Restrict ingress rules to specific IP ranges"
+    },
+    {
+      "id": "TF007",
+      "type": "IAC_MISCONFIGURATION",
+      "severity": "MEDIUM",
+      "title": "CloudWatch Logging Disabled",
+      "description": "CloudWatch logging is not enabled",
+      "file": "infrastructure/monitoring.tf",
+      "resource": "aws_cloudwatch_log_group.app",
+      "remediation": "Enable CloudWatch log groups and log streams"
+    },
+    {
+      "id": "DEPENDENCY_VULNERABILITY",
+      "type": "DEPENDENCY_VULNERABILITY",
+      "severity": "HIGH",
+      "package": "requests",
+      "version": "2.25.0",
+      "description": "Vulnerable version of requests package - CVE-2023-xxxxx",
+      "remediation": "Update to requests>=2.31.0"
+    }
+  ]
+}
