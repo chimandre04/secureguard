@@ -10,6 +10,7 @@ from secureguard.analyzers.cloudformation import CloudFormationAnalyzer
 from secureguard.utils.severity import Severity
 from secureguard.utils.output import format_output, OutputFormat
 from secureguard.compliance.cli_commands import compliance_group
+from secureguard.remediation.cli_commands import fix_group
 
 
 @click.group()
@@ -24,6 +25,9 @@ def main():
 
 # Add compliance command group
 main.add_command(compliance_group)
+
+# Add fix/remediation command group
+main.add_command(fix_group)
 
 
 @main.group()

@@ -1,0 +1,7 @@
+# Example requirements.txt with vulnerabilities
+requests==2.25.0
+flask==1.0.0
+django==2.2.0
+pyyaml==5.1
+cryptography==2.8
+urllib3==1.25.8
